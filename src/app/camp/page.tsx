@@ -1,9 +1,7 @@
 import Form from "@/app/components/molecules/Form";
 import React from "react";
 
-type Props = {};
-
-function CampPage({}: Props) {
+function CampPage({}) {
   return (
     <div>
       <Form />
