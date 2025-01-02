@@ -4,7 +4,7 @@ import React from "react";
 function CampPage({}) {
   return (
     <div>
-      นี่คือ Form
+      <p className="text-red-400">นี่คือ Form</p>
       <Form />
     </div>
   );
