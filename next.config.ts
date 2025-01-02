@@ -1,19 +1,19 @@
 import type { NextConfig } from "next";
+
+const subresourceSrc = "subresource-src";
 const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline';
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data:;
-    font-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    upgrade-insecure-requests;
+  default-src 'self';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' blob: data:;
+  font-src 'self';
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+  ${subresourceSrc} 'self';
 `;
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     remotePatterns: [
       {
@@ -62,6 +62,11 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
+  },
+
+  webpack(config) {
+    config.output.crossOriginLoading = "anonymous";
+    return config;
   },
 };
 
