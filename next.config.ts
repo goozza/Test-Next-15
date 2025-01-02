@@ -1,53 +1,68 @@
-import { SubresourceIntegrityPlugin as SriWebpackPlugin } from "webpack-subresource-integrity";
-import { createSecureHeaders } from "next-secure-headers";
-import { Configuration } from "webpack";
+import type { NextConfig } from "next";
+const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' blob: data:;
+    font-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+`;
 
-module.exports = {
+const nextConfig: NextConfig = {
+  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "assets.tops.co.th",
+        pathname: "/**",
+      },
+    ],
+  },
+  compress: false,
+
   async headers() {
     return [
       {
-        source: "/(.*)",
-        headers: createSecureHeaders({
-          contentSecurityPolicy: {
-            directives: {
-              defaultSrc: ["'self'"],
-              styleSrc: ["'self'", "'unsafe-inline'"],
-              imgSrc: ["'self'"],
-              baseURI: "self", // Corrected this line to use 'baseURI'
-              formAction: "self",
-              frameAncestors: ["none"], // Corrected this line
-            },
+        source: "/(.*)?", // Matches all pages
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: cspHeader.replace(/\n/g, ""),
           },
-          frameGuard: "deny",
-          noopen: "noopen",
-          nosniff: "nosniff",
-          xssProtection: "sanitize",
-          forceHTTPSRedirect: [
-            true,
-            { maxAge: 60 * 60 * 24 * 360, includeSubDomains: true },
-          ],
-          referrerPolicy: "same-origin",
-        }),
+          {
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          {
+            key: "Permissions-Policy",
+            value:
+              "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "origin-when-cross-origin",
+          },
+        ],
       },
     ];
   },
-  webpack(config: Configuration) {
-    if (config.output) {
-      // Add a type guard to check if 'output' is defined
-      config.output.crossOriginLoading = "anonymous";
-    }
-
-    // Ensure plugins is always an array
-    if (!config.plugins) {
-      config.plugins = [];
-    }
-
-    config.plugins.push(
-      new SriWebpackPlugin({
-        hashFuncNames: ["sha256", "sha384"],
-        enabled: true,
-      })
-    );
-    return config;
-  },
 };
+
+export default nextConfig;
