@@ -1,13 +1,13 @@
 // components/templates/HomeTemplate.tsx
 import React from "react";
-import Card from "../../molecules/Card";
-import Footer from "../../organisms/Footer";
+import Card from "../../molecules/card";
+import Footer from "../../organisms/footer";
 
 type HomeTemplateProps = {
   data: { title: string; description: string; id: number }[]; // ข้อมูลที่ได้รับจาก Server Component
 };
 
-const HomeTemplate: React.FC<HomeTemplateProps> = ({ data }) => {
+const Home: React.FC<HomeTemplateProps> = ({ data }) => {
   // console.log(data);
   // const handleAction = (id: number) => {
   //   alert(id);
@@ -34,4 +34,4 @@ const HomeTemplate: React.FC<HomeTemplateProps> = ({ data }) => {
   );
 };
 
-export default HomeTemplate;
+export default Home;

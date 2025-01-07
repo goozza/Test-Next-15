@@ -1,6 +1,6 @@
 "use client";
 
-import { loginAction } from "@/app/utils/action";
+import { loginIamAction } from "@/app/utils/login/action";
 import React, { useState } from "react";
 
 const Form: React.FC = () => {
@@ -10,7 +10,7 @@ const Form: React.FC = () => {
   } | null>(null);
 
   const handleSubmit = async (formData: FormData) => {
-    const result = await loginAction(formData);
+    const result = await loginIamAction(formData);
     setStatus(result);
   };
 

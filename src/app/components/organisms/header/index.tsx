@@ -1,4 +1,5 @@
 // components/organisms/Header.tsx
+import { LogoutAction } from "@/app/utils/logout/action";
 import Link from "next/link";
 import React from "react";
 
@@ -21,6 +22,7 @@ const Header: React.FC = () => {
             </li>
           </ul>
         </nav>
+        <div onClick={LogoutAction}>Log out</div>
       </div>
     </header>
   );

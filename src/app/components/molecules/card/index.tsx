@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import Button from "../atoms/Button";
+import Button from "../../atoms/button";
 
 type CardProps = {
   title: string;
