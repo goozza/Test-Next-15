@@ -104,13 +104,6 @@ export async function loginIamAction(formData: FormData) {
         maxAge: 60 * 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
       });
 
-      cookieStore.set("user", data.data.access_token, {
-        httpOnly: true, // ไม่สามารถเข้าถึงได้จาก JavaScript
-        secure: true, // ตั้งค่าเป็น true หากใน production
-        sameSite: "strict", //
-        maxAge: 60 * 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
-      });
-
       return { success: true, message: "Login successful!" };
     } else {
       return { success: false, message: "Login failed." };
