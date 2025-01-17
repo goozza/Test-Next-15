@@ -3,52 +3,11 @@ import { cookies } from "next/headers";
 import { encryptDataAction } from "../encryp/action";
 import { decryptDataAction } from "../decryp/action";
 import { redirect } from "next/navigation"; // Import redirect
-
-// export async function loginAction(formData: FormData) {
-//   const username = formData.get("username")?.toString();
-//   const password = formData.get("password")?.toString();
-
-//   if (!username || !password) {
-//     return { success: false, message: "Email and password are required." };
-//   }
-
-//   try {
-//     const response = await fetch("https://dummyjson.com/auth/login", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({
-//         username: "emilys", // ชื่อผู้ใช้จำลอง
-//         password: "emilyspass", // รหัสผ่านจำลอง
-//         expiresInMins: 60,
-//       }),
-//       credentials: "include",
-//     });
-
-//     const data = await response.json();
-
-//     if (response.status === 200) {
-//       // ใช้ await เพื่อเข้าถึง cookies() และตั้งค่า token
-//       const cookieStore = await cookies();
-
-//       // กำหนดค่า HttpOnly และ SameSite สำหรับคุกกี้
-//       cookieStore.set("token", data.accessToken, {
-//         httpOnly: true, // ไม่สามารถเข้าถึงได้จาก JavaScript
-//         secure: true, // ตั้งค่าเป็น true หากใน production
-//         sameSite: "strict", //
-//         maxAge: 60 * 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
-//       });
-
-//       return { success: true, message: "Login successful!" };
-//     } else {
-//       return { success: false, message: data.message || "Login failed." };
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     return { success: false, message: "An error occurred while logging in." };
-//   }
-// }
+import { profileAction } from "../profile/action";
+import { signToken } from "../sign-key/action";
 
 export async function loginIamAction(formData: FormData) {
+  //ใน prd ไม่รู่้เหมือนกันทำไง
   if (process.env.NODE_ENV === "development") {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
   }
@@ -74,7 +33,7 @@ export async function loginIamAction(formData: FormData) {
 
   try {
     const response = await fetch(
-      "https://dev-iamics.inet.co.th/iam/moph/auth/login",
+      `${process.env.NEXT_PUBLIC_BASE_IAM_API}/auth/login`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -101,7 +60,16 @@ export async function loginIamAction(formData: FormData) {
         httpOnly: true, // ไม่สามารถเข้าถึงได้จาก JavaScript
         secure: true, // ตั้งค่าเป็น true หากใน production
         sameSite: "strict", //
-        maxAge: 60 * 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
+        maxAge: 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
+      });
+
+      const sign = await signToken(data.data.access_token);
+
+      cookieStore.set("sign", sign, {
+        httpOnly: true, // ไม่สามารถเข้าถึงได้จาก JavaScript
+        secure: true, // ตั้งค่าเป็น true หากใน production
+        sameSite: "strict", //
+        maxAge: 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
       });
 
       return { success: true, message: "Login successful!" };
@@ -112,6 +80,12 @@ export async function loginIamAction(formData: FormData) {
     console.log(error);
     return { success: false, message: "An error occurred while logging in." };
   } finally {
-    redirect("/dashboard");
+    try {
+      await profileAction();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      redirect("/dashboard");
+    }
   }
 }

@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 export async function LogoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete("token");
+  cookieStore.delete("user");
+  cookieStore.delete("sign");
 
   redirect("/");
 }
