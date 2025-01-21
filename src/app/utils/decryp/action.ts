@@ -22,7 +22,6 @@ export async function decryptDataAction(
     if (decrypted) {
       try {
         const json = JSON.parse(decrypted);
-
         const myobj = data_return ? { ...data_return, data: json } : json;
         return myobj;
       } catch (jsonError) {

@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
     ],
   },
   compress: false,
+  optimizeFonts: true,
 
   async headers() {
     return [

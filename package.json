@@ -20,6 +20,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sri-webpack-plugin": "^0.1.0",
+    "swr": "^2.3.0",
     "webpack-subresource-integrity": "^5.2.0-rc.1"
   },
   "devDependencies": {

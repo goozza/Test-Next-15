@@ -29,7 +29,7 @@ export async function profileAction() {
         httpOnly: true, // ไม่สามารถเข้าถึงได้จาก JavaScript
         secure: true, // ตั้งค่าเป็น true หากใน production
         sameSite: "strict", //
-        maxAge: 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
+        maxAge: 60 * 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
       });
 
       return { success: true, message: "Login successful!" };

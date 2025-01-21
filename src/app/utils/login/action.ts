@@ -13,8 +13,8 @@ export async function loginIamAction(formData: FormData) {
   }
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
-  const defaultIv: any = process.env.SECRET_KEY_KEY_IAM_IV;
-  const defaultKey: any = process.env.SECRET_KEY_KEY_IAM_KEY;
+  const defaultIv: string | undefined = process.env.SECRET_KEY_KEY_IAM_IV;
+  const defaultKey: string | undefined = process.env.SECRET_KEY_KEY_IAM_KEY;
   const username = formData.get("username")?.toString();
   const password = formData.get("password")?.toString();
 
@@ -60,7 +60,7 @@ export async function loginIamAction(formData: FormData) {
         httpOnly: true, // ไม่สามารถเข้าถึงได้จาก JavaScript
         secure: true, // ตั้งค่าเป็น true หากใน production
         sameSite: "strict", //
-        maxAge: 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
+        maxAge: 60 * 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
       });
 
       const sign = await signToken(data.data.access_token);
@@ -69,7 +69,7 @@ export async function loginIamAction(formData: FormData) {
         httpOnly: true, // ไม่สามารถเข้าถึงได้จาก JavaScript
         secure: true, // ตั้งค่าเป็น true หากใน production
         sameSite: "strict", //
-        maxAge: 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
+        maxAge: 60 * 60, // กำหนดเวลาให้หมดอายุใน 1 ชั่วโมง (60 * 60 วินาที)
       });
 
       return { success: true, message: "Login successful!" };

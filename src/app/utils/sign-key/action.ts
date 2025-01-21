@@ -14,7 +14,7 @@ export async function signToken(data: string) {
     const jwt = new SignJWT({ data }) // ใส่ข้อมูลที่ต้องการเซ็น
       .setProtectedHeader({ alg: "HS256" }) // ตั้งค่าอัลกอริธึม
       .setIssuedAt() // ตั้งเวลาออก token
-      .setExpirationTime("1m"); // ตั้งค่าเวลาในการหมดอายุ (1 นาที)
+      .setExpirationTime("1h"); // ตั้งค่าเวลาในการหมดอายุ (1 นาที)
 
     const token = await jwt.sign(SECRET_KEY); // เซ็นด้วยคีย์ลับ
     return token;
