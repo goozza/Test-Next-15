@@ -3,7 +3,7 @@ import React, { Suspense } from "react";
 import Card from "../../molecules/card";
 import Footer from "../../organisms/footer";
 
-type DataCard = {
+type DataTypeMap = {
   userId: number;
   id: number;
   title: string;
@@ -15,7 +15,7 @@ const fetchData = async () => {
   return data.slice(0, 9); // นำแค่ 6 โพสต์แรกเพื่อแสดงตัวอย่าง
 };
 
-const Home: React.FC = async () => {
+const Home: React.FC = async ({}) => {
   const data = await fetchData(); // ดึงข้อมูลจาก API ฝั่งเซิร์ฟเวอร์
 
   return (
@@ -25,7 +25,7 @@ const Home: React.FC = async () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
           <Suspense fallback={<div>Loading data...</div>}>
-            {data.map((item: DataCard, index: number) => (
+            {data.map((item: DataTypeMap, index: number) => (
               <Card
                 key={index}
                 title={item.title}

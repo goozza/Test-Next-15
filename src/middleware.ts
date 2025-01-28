@@ -14,7 +14,9 @@ export async function middleware(request: NextRequest) {
       if (
         currentPath === "/dashboard" ||
         currentPath === "/about" ||
-        currentPath === "/contact"
+        currentPath === "/contact" ||
+        currentPath === "/contact" ||
+        currentPath === "/check"
       ) {
         return NextResponse.redirect(new URL("/", request.url));
       }
@@ -44,5 +46,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/dashboard", "/about", "/contact"], // Match both paths
+  matcher: ["/", "/dashboard", "/about", "/contact", "/check"], // Match both paths
 };

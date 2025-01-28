@@ -1,7 +1,7 @@
 "use server";
 import CryptoJS from "crypto-js";
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-export async function decryptDataAction(
+export async function decryptDataIamAction(
   data: any,
   key_another?: any,
   iv_another?: any,
@@ -21,7 +21,7 @@ export async function decryptDataAction(
 
     if (decrypted) {
       try {
-        const json = JSON.stringify(eval("(" + decrypted + ")"));
+        const json = JSON.parse(decrypted);
         const myobj = data_return ? { ...data_return, data: json } : json;
         return myobj;
       } catch (jsonError) {

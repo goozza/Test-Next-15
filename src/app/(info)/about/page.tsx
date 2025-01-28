@@ -1,7 +1,7 @@
 import React from "react";
-
+import About from "@components/templates/about";
 const AboutPage = async () => {
-  return <div>About Page</div>;
+  return <About />;
 };
 
 export default AboutPage;
