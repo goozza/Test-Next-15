@@ -3,8 +3,9 @@
 import axios from "axios";
 import { BASE_API } from "./api-config";
 import { decryptDataAction } from "../utils/decryp/action";
-import { LogoutAction } from "../utils/logout/action";
 import { cookies } from "next/headers";
+import { decryptDataIamAction } from "../utils/decryp-iam/action";
+import { redirect } from "next/navigation";
 let token: string = "";
 // const { clearDataCenter,  } =useDataCenterStorePersist();
 const getConfig = (
@@ -36,9 +37,7 @@ const getConfig = (
   return config;
 };
 
-const axiosSuccess = (response: any) => {
-  console.log("response", response);
-
+const axiosSuccess = async (response: any) => {
   const decode = response?.config?.decode;
   const url = response?.config?.baseURL;
   const iam_url = process.env.NEXT_PUBLIC_BASE_IAM_API;
@@ -48,7 +47,7 @@ const axiosSuccess = (response: any) => {
 
   if (decode) {
     if (url === iam_url) {
-      return decryptDataAction(iam, iam_key, iam_iv, response?.data);
+      return decryptDataIamAction(iam, iam_key, iam_iv, response?.data);
     } else {
       return decryptDataAction(response?.data);
     }
@@ -57,31 +56,29 @@ const axiosSuccess = (response: any) => {
   }
 };
 
-const axiosError = (error: any) => {
-  const url = error?.config?.baseURL;
-  const iam_url = process.env.NEXT_PUBLIC_BASE_IAM_API;
-  const iam = error?.response?.data?.result;
-  const iam_iv: any = process.env.SECRET_KEY_KEY_IAM_IV;
-  const iam_key: any = process.env.SECRET_KEY_KEY_IAM_KEY;
+const axiosError = async (error: any) => {
+  // const url = error?.config?.baseURL;
+  // const iam_url = process.env.NEXT_PUBLIC_BASE_IAM_API;
+  // const iam = error?.response?.data?.result;
+  // const iam_iv: any = process.env.SECRET_KEY_KEY_IAM_IV;
+  // const iam_key: any = process.env.SECRET_KEY_KEY_IAM_KEY;
   // console.log("axiosError --->", error, error?.response);
-  if (
-    (error?.response?.status === 401 &&
-      error?.response?.data?.message !== "ใส่ 2FA ผิด กรุณาลองใหม่อีกครั้ง") ||
-    error?.response?.code === 401
-  ) {
-    if (url === iam_url) {
-      return decryptDataAction(iam, iam_key, iam_iv, error?.response?.data);
-    }
-    // eslint-disable-next-line no-undef
-  } else {
-    if (url === iam_url) {
-      return decryptDataAction(iam, iam_key, iam_iv, error?.response?.data);
-    } else {
-      // console.log( error);
-      if (error?.message !== "canceled" && error?.status !== 400) {
-        return decryptDataAction(error?.response?.data);
-      }
-    }
+  if (error?.response?.status === 401) {
+    redirect("/check");
+
+    //   if (url === iam_url) {
+    //     return decryptDataAction(iam, iam_key, iam_iv, error?.response?.data);
+    //   }
+    //   // eslint-disable-next-line no-undef
+    // } else {
+    //   if (url === iam_url) {
+    //     return decryptDataAction(iam, iam_key, iam_iv, error?.response?.data);
+    //   } else {
+    //     // console.log( error);
+    //     if (error?.message !== "canceled" && error?.status !== 400) {
+    //       return decryptDataAction(error?.response?.data);
+    //     }
+    //   }
   }
 };
 const getConfigFormdata = (
@@ -183,7 +180,7 @@ export default {
   get: (
     url: string,
     params?: any,
-    port?: number | null,
+    port?: any,
     baseURL?: string,
     decode?: boolean,
     signal?: AbortSignal
@@ -191,7 +188,7 @@ export default {
   post: (
     url: string,
     params?: any,
-    port?: number | null,
+    port?: any,
     baseURL?: string,
     decode?: boolean,
     signal?: AbortSignal
@@ -199,7 +196,7 @@ export default {
   put: (
     url: string,
     params?: any,
-    port?: number | null,
+    port?: any,
     baseURL?: string,
     decode?: boolean,
     signal?: AbortSignal
@@ -207,7 +204,7 @@ export default {
   delete: (
     url: string,
     params?: any,
-    port?: number | null,
+    port?: any,
     baseURL?: string,
     decode?: boolean,
     signal?: AbortSignal
@@ -215,7 +212,7 @@ export default {
   patch: (
     url: string,
     params?: any,
-    port?: number | null,
+    port?: any,
     baseURL?: string,
     decode?: boolean,
     signal?: AbortSignal
